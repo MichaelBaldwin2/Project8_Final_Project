@@ -7,6 +7,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.util.Collections;
+
 public class GUI extends Application {
 // Written by: Mike Baldwin
 // Project 8 - JavaFX Phonebook
@@ -34,17 +36,32 @@ public void start(Stage primaryStage) throws Exception {
     Menu fileMenu = new Menu("File");
     Menu editMenu = new Menu("Edit");
     MenuItem saveMenuItem = new MenuItem("Save");
-    saveMenuItem.setOnAction(event -> phonebook.savePhonebook());
-    fileMenu.getItems().add(saveMenuItem);
     MenuItem loadMenuItem = new MenuItem("Load");
+    MenuItem exitMenuItem = new MenuItem("Exit");
+    MenuItem mergeMenuItem = new MenuItem("Merge All");
+    MenuItem sortMenuItem = new MenuItem("Sort All");
+
+    saveMenuItem.setOnAction(event -> phonebook.savePhonebook());
     loadMenuItem.setOnAction(event -> {
         phonebook.loadPhonebook();
         listAll();
     });
-    fileMenu.getItems().add(loadMenuItem);
-    MenuItem exitMenuItem = new MenuItem("Exit");
     exitMenuItem.setOnAction(event -> System.exit(1));
+    mergeMenuItem.setOnAction(event -> {
+        phonebook.mergeAllSimiliar();
+        listAll();
+    });
+    sortMenuItem.setOnAction(event -> {
+        Collections.sort(phonebook.entries);
+        listAll();
+    });
+
+    fileMenu.getItems().add(saveMenuItem);
+    fileMenu.getItems().add(loadMenuItem);
     fileMenu.getItems().add(exitMenuItem);
+    editMenu.getItems().add(mergeMenuItem);
+    editMenu.getItems().add(sortMenuItem);
+
     menuBar = new MenuBar(fileMenu, editMenu);
 
     //Setup Search Bar
@@ -96,12 +113,15 @@ private void showDetails(Entry entry) {
 
     Label nameLabel = new Label(entry.name);
     Label numberLabel = new Label(entry.number);
+    Label notesLabel = new Label(entry.notes);
     nameLabel.setUserData(entry);
     numberLabel.setUserData(entry);
+    notesLabel.setUserData(entry);
 
     detailsPane.add(editButton, 0, 0);
     detailsPane.add(nameLabel, 0, 1);
     detailsPane.add(numberLabel, 0, 2);
+    detailsPane.add(notesLabel, 0, 3);
 }
 
 private void editEntry(Entry entry) {
@@ -132,6 +152,9 @@ private void editEntry(Entry entry) {
 }
 
 private void listAll() {
+    //We need to clear the search bar as well
+    searchBar.setText("");
+
     GridPane scrollContentPane = new GridPane();
 
     for (int i = 0; i < phonebook.entries.size(); i++) {

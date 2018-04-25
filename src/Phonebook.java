@@ -21,6 +21,20 @@ public Entry findEntry(String name) {
     return null;
 }
 
+public void mergeAllSimiliar() {
+    for (int i = 0; i < entries.size(); i++) {
+        for (int j = 0; j < entries.size(); j++) {
+            Entry iEntry1 = entries.get(i);
+            Entry iEntry2 = entries.get(j);
+
+            if (iEntry1 != null && iEntry2 != null && iEntry1.name.equals(iEntry2.name) && iEntry1 != iEntry2) {
+                iEntry1.notes += "\nSecondary Number[" + iEntry2.number + ']';
+                entries.remove(j);
+            }
+        }
+    }
+}
+
 public void savePhonebook() {
     File file = new File(System.getProperty("user.dir") + "/Phonebook.dir");
 
