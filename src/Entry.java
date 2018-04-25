@@ -1,14 +1,9 @@
 public class Entry {
-public String codeName, number, notes;
+public String name, number, notes;
 
-Entry(String codeName, String number, String notes) {
-    this.codeName = codeName;
+Entry(String name, String number, String notes) {
+    this.name = name;
     this.number = number;
     this.notes = notes;
-}
-
-@Override
-public String toString() {
-    return "-- " + codeName + "\n-- " + number + "\n-- " + notes;
 }
 }
