@@ -13,15 +13,7 @@ public class Phonebook {
 
 public List<Entry> entries = new ArrayList<>();
 
-public Entry findEntry(String name) {
-    for (Entry iEntry : entries)
-        if (iEntry != null && iEntry.name.equals(name))
-            return iEntry;
-
-    return null;
-}
-
-public void mergeAllSimiliar() {
+public void mergeAllSimilar() {
     for (int i = 0; i < entries.size(); i++) {
         for (int j = 0; j < entries.size(); j++) {
             Entry iEntry1 = entries.get(i);
