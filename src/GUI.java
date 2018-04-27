@@ -278,12 +278,10 @@ private void showDeleteConfirmationPopup(Entry entry) {
 }
 
 private void listAll() {
-    searchBar.setText("");
-
-    VBox contentPane = new VBox();
+    VBox contentPane;
+    contentPane = new VBox();
 
     for (Entry iEntry : phonebook.entries) {
-
         // variable declarations
         GridPane entryPane;
         Label nameLabel, numberLabel, instanceNameLabel, instanceNumberLabel;
@@ -321,36 +319,52 @@ private void listAll() {
     }
 
     scrollPane.setContent(contentPane);
+    searchBar.setText("");
 }
 
 private void find(String name) {
-    GridPane scrollContentPane = new GridPane();
+    VBox contentPane;
+    contentPane = new VBox();
 
-    for (int i = 0, pos = 0; i < phonebook.entries.size(); i++) {
-        if (!phonebook.entries.get(i).name.contains(name))
+    for (Entry iEntry : phonebook.entries) {
+        if (!iEntry.name.toLowerCase().contains(name.toLowerCase()))
             continue;
 
-        GridPane entryPane = new GridPane();
+        // variable declarations
+        GridPane entryPane;
+        Label nameLabel, numberLabel, instanceNameLabel, instanceNumberLabel;
+        Button detailsButton;
+
+        // constructors
+        entryPane = new GridPane();
+        nameLabel = new Label("Name:");
+        numberLabel = new Label("Number:");
+        instanceNameLabel = new Label(iEntry.name);
+        instanceNumberLabel = new Label(iEntry.number);
+        detailsButton = new Button("Details");
+
+        // setups
         entryPane.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         entryPane.setAlignment(Pos.TOP_LEFT);
-        entryPane.setHgap(10);
         entryPane.setVgap(10);
+        entryPane.setHgap(15);
         entryPane.setPadding(new Insets(25, 25, 25, 25));
-
-        Button detailsButton = new Button("Details");
-        detailsButton.setUserData(phonebook.entries.get(i));
-        detailsButton.setOnAction(event -> showDetailsPopup((Entry) detailsButton.getUserData()));
-
-        Label nameLabel = new Label(phonebook.entries.get(i).name);
-        Label numberLabel = new Label(phonebook.entries.get(i).number);
-
+        nameLabel.setFont(new Font(14));
+        numberLabel.setFont(new Font(14));
+        instanceNameLabel.setUserData(iEntry);
+        instanceNumberLabel.setUserData(iEntry);
+        detailsButton.setUserData(iEntry);
         entryPane.add(nameLabel, 0, 0);
         entryPane.add(numberLabel, 0, 1);
-        entryPane.add(detailsButton, 1, 0);
+        entryPane.add(instanceNameLabel, 1, 0);
+        entryPane.add(instanceNumberLabel, 1, 1);
+        entryPane.add(detailsButton, 1, 2);
+        contentPane.getChildren().add(entryPane);
 
-        scrollContentPane.add(entryPane, 0, pos++);
+        // events
+        detailsButton.setOnAction(event -> showDetailsPopup((Entry) detailsButton.getUserData()));
     }
 
-    scrollPane.setContent(scrollContentPane);
+    scrollPane.setContent(contentPane);
 }
 }
